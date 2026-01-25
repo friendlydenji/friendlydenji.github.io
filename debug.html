@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Debug - Onepage Scroll Test</title>
+    <script src="templates/jquery-latest.min.js"></script>
+    <script src="templates/jquery.onepage-scroll.js"></script>
+    <link href='styles/onepage-scroll.css' rel='stylesheet' type='text/css'>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .main {
+            height: 100%;
+        }
+
+        section {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .page1 {
+            background: #3b82f6;
+        }
+
+        .page2 {
+            background: #10b981;
+        }
+
+        .page3 {
+            background: #f59e0b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <section class="page1">
+            <h1>Page 1</h1>
+        </section>
+        <section class="page2">
+            <h1>Page 2</h1>
+        </section>
+        <section class="page3">
+            <h1>Page 3</h1>
+        </section>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            console.log("jQuery loaded:", typeof $ !== 'undefined');
+            console.log("Sections found:", $("section").length);
+
+            $(".main").onepage_scroll({
+                sectionContainer: "section",
+                loop: true
+            });
+
+            console.log("Plugin initialized");
+            console.log("Body classes:", $("body").attr("class"));
+        });
+    </script>
+</body>
+
+</html>
