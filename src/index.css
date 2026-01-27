@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: #0f172a;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent: #3b82f6;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #0f172a;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent: #3b82f6;
+    }
+  }
+
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans antialiased m-0;
+  }
+}
