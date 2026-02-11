@@ -33,7 +33,7 @@ const Login: React.FC = () => {
                 setError(result.error || 'Authentication failed');
                 setTimeout(() => setError(null), 3000);
             }
-        } catch (err) {
+        } catch {
             setError('Connection failed. Are you running npm run dev?');
         }
     };

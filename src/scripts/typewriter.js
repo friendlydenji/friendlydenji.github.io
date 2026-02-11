@@ -24,7 +24,7 @@ class Typewriter {
         let typeSpeed = 100;
 
         if (this.isDeleting) {
-            typeSpeed /= 2;
+            typeSpeed /= 4;
         }
 
         if (!this.isDeleting && this.txt === fullTxt) {
@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', init);
 function init() {
     const txtElement = document.getElementById('typewriter');
     if (txtElement) {
-        const words = ["Spider Man", "Denji", "a Software Engineer"];
-        const wait = 3000;
+        const words = ["Spider Man", "Denji", "a Brazil grasshoper", "a Software Engineer"];
+        const wait = 1000;
         new Typewriter('typewriter', words, wait);
     }
 }

@@ -1,30 +1,4 @@
-export interface Chapter {
-    id: string;
-    title: string;
-    content: string;
-}
-
-export interface Book {
-    id: string;
-    title: string;
-    author: string;
-    authorBio?: string;
-    coverImage: string;
-    category: string;
-    status: 'read' | 'reading' | 'wanna-read' | 'end' | 'following';
-    type: 'fiction' | 'non-fiction';
-    tags: string[];
-    userRating?: number;
-    averageRating?: number;
-    readingTime?: string;
-    progress?: number;
-    summary: string;
-    chapters?: Chapter[];
-    date: string;
-    readAt?: string;
-    year?: string;
-    collection?: 'normal_books' | 'manga' | 'specialized';
-}
+import { Book } from '../types/book';
 
 export const calculateReadingTime = (book: Book): string => {
     const wordsPerMinute = 200;
@@ -48,7 +22,7 @@ export const bookApi = {
     getAllBooks: async (collection: string = 'normal_books'): Promise<Book[]> => {
         try {
             const response = await import(`../data/${collection}.json`);
-            return (response.default as Book[]).map(b => ({ ...b, collection: collection as any }));
+            return (response.default as Book[]).map(b => ({ ...b, collection: collection as 'normal_books' | 'manga' | 'specialized' }));
         } catch (error) {
             console.error(`Failed to load collection: ${collection}`, error);
             return [];
@@ -59,8 +33,8 @@ export const bookApi = {
         try {
             const response = await import(`../data/${collection}.json`);
             const book = (response.default as Book[]).find((book: Book) => String(book.id) === String(id));
-            return book ? { ...book, collection: collection as any } : undefined;
-        } catch (error) {
+            return book ? { ...book, collection: collection as 'normal_books' | 'manga' | 'specialized' } : undefined;
+        } catch {
             return undefined;
         }
     },

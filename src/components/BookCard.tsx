@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Book } from '../lib/api';
+import { Book } from '../types/book';
 import { Star } from 'lucide-react';
+import { useHover } from '../hooks/useHover';
 
 interface BookCardProps {
     book: Book;
@@ -98,6 +99,22 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
     );
 
 
+    const { setHoveredMedia } = useHover();
+    const isFiction = book.type === 'fiction';
+
+    const handleMouseEnter = () => {
+        if (isFiction) {
+            const media = book.ambientMedia || { url: book.coverImage, type: 'image' };
+            setHoveredMedia(media);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (isFiction) {
+            setHoveredMedia(null);
+        }
+    };
+
     if (isWannaRead) {
         return (
             <a
@@ -105,6 +122,8 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group block h-full opacity-50 hover:opacity-100 transition-opacity duration-300"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
             >
                 {Content}
             </a>
@@ -113,11 +132,17 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
 
     if (isNonFiction) {
         const basePath = "/myreading";
-        const path = book.collection === 'manga' ? `${basePath}/manga/summary/${book.id}`
-            : book.collection === 'specialized' ? `${basePath}/specialized/summary/${book.id}`
-                : `${basePath}/summary/${book.id}`;
+        const bookPath = book.collection === 'manga' ? '/manga'
+            : book.collection === 'specialized' ? '/specialized'
+                : '';
+        const path = `${basePath}${bookPath}/summary/${book.id}`;
         return (
-            <Link to={path} className="group block h-full">
+            <Link
+                to={path}
+                className="group block h-full"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
                 {Content}
             </Link>
         );
@@ -129,6 +154,8 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="group block h-full opacity-90 hover:opacity-100 transition-all"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             {Content}
         </a>

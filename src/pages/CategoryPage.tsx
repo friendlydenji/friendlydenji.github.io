@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { bookApi, Book } from '../lib/api';
+import React from 'react';
 import BookCard from '../components/BookCard';
+import { useBooks } from '../hooks/useBooks';
+import SectionHeader from '../components/ui/SectionHeader';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
 
 interface CategoryPageProps {
     title: string;
@@ -8,37 +10,9 @@ interface CategoryPageProps {
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = ({ title, collection }) => {
-    const [books, setBooks] = useState<Book[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { books, loading } = useBooks(collection);
 
-    useEffect(() => {
-        bookApi.getAllBooks(collection).then((data) => {
-            // Sort books by readAt or date descending
-            const sorted = [...data].sort((a, b) => {
-                const dateA = new Date(a.readAt || a.date).getTime();
-                const dateB = new Date(b.readAt || b.date).getTime();
-                return dateB - dateA;
-            });
-            setBooks(sorted);
-            setLoading(false);
-        });
-    }, [collection]);
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-[60vh]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-            </div>
-        );
-    }
-
-    const SectionHeader = ({ sectionTitle, count }: { sectionTitle: string, count: number }) => (
-        <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-2xl font-bold uppercase tracking-widest text-[var(--test-primary)]">{sectionTitle}</h2>
-            <div className="h-px flex-1 bg-gray-100 dark:bg-gray-800"></div>
-            <span className="text-[10px] font-medium text-[var(--text-secondary)] opacity-60 uppercase tracking-widest">{count} {count > 1 ? 'items' : 'item'}</span>
-        </div>
-    );
+    if (loading) return <LoadingSpinner />;
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -51,7 +25,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ title, collection }) => {
 
             {books.length > 0 ? (
                 <section>
-                    <SectionHeader sectionTitle="Collection" count={books.length} />
+                    <SectionHeader title="Collection" count={books.length} />
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
                         {books.map((book) => (
                             <BookCard key={book.id} book={book} />

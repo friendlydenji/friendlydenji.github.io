@@ -13,7 +13,7 @@ const Typewriter = ({ words, wait = 3000 }: { words: string[], wait?: number }) 
 
 
         // Custom logic to match original slightly complex timing
-        let timer: any;
+        let timer: ReturnType<typeof setTimeout>;
         if (!isDeleting && text === currentWord) {
             // Pause at end of word
             if ((wordIndex % words.length) === words.length - 1) {
@@ -34,7 +34,7 @@ const Typewriter = ({ words, wait = 3000 }: { words: string[], wait?: number }) 
                 } else {
                     setText(currentWord.substring(0, text.length + 1));
                 }
-            }, isDeleting ? 50 : 100);
+            }, isDeleting ? 25 : 100);
         }
 
         return () => clearTimeout(timer);
@@ -118,23 +118,21 @@ const Landing = () => {
                                 <a href="https://vn.linkedin.com/in/tadienminhtri" target="_blank" className="social-icon" aria-label="LinkedIn">
                                     <i className="fa fa-linkedin"></i>
                                 </a>
-                                <a href="https://github.com/tritdm" target="_blank" className="social-icon" aria-label="GitHub">
-                                    <i className="fa fa-github"></i>
-                                </a>
-                                <a href="https://www.facebook.com/profile.php?id=100016256626246" target="_blank" className="social-icon" aria-label="Facebook">
-                                    <i className="fa fa-facebook"></i>
+                                <a href="mailto:tadienminhtri@gmail.com" target="_blank" className="social-icon" aria-label="Email">
+                                    <i className="fa fa-envelope"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* PAGE 2: EXPERIENCE + SKILLS */}
+                {/*
+                // {/* PAGE 2: EXPERIENCE + SKILLS }
                 <section className="page-experience-skills" ref={el => sectionRefs.current[1] = el}>
                     <div className="page_container">
                         <h2 className="section-title">Experience & Expertise</h2>
                         <div className="experience-skills-layout">
-                            {/* Left: Experience Timeline */}
+                            // {/* Left: Experience Timeline }
                             <div className="experience-section">
                                 <h3 className="subsection-title">Professional Journey</h3>
                                 <div className="timeline">
@@ -147,11 +145,11 @@ const Landing = () => {
                                             <p className="timeline-description">Specializing in firmware development and system optimization for embedded devices.</p>
                                         </div>
                                     </div>
-                                    {/* Add more timeline items as needed */}
+                                    //{/* Add more timeline items as needed }
                                 </div>
                             </div>
 
-                            {/* Right: Skills */}
+                            //{/* Right: Skills }
                             <div className="skills-section">
                                 <h3 className="subsection-title">Technical Skills</h3>
                                 <div className="skills-container">
@@ -186,6 +184,7 @@ const Landing = () => {
                         </div>
                     </div>
                 </section>
+                */}
 
                 {/* PAGE 3: PROJECTS & OTHER */}
                 <section className="page-projects" ref={el => sectionRefs.current[2] = el}>
@@ -195,32 +194,47 @@ const Landing = () => {
                         <div className="projects-grid" ref={projectsGridRef}>
                             <div className="project-card">
                                 <div className="project-icon">📚</div>
-                                <h3>Reading</h3>
-                                <p>I have never read a book (of course, except for textbooks and manga) until I was 23 years old. Thanks to my senior colleague at my first company, I started reading books by buying an e-reader. And I want to share my reading progress with you.</p>
+                                <h3>Reading and writing</h3>
+                                <p>I had never read a book (except for textbooks and manga) until I was 23 years old.
+                                    Thanks to a senior colleague at my first company, I started reading books after buying an e-reader.
+                                    After dozens of books, I wanted to write somethings or at least summarize books for everyone to read with me.</p>
                                 <div className="project-tags"></div>
                                 <Link to="/myreading" className="project-link">
-                                    View my reading <i className="fa fa-external-link"></i>
+                                    Maybe my blog in future <i className="fa fa-external-link"></i>
                                 </Link>
+                            </div>
+
+                            <div className="project-card">
+                                <div className="project-icon">💻</div>
+                                <h3>Coding competitive</h3>
+                                <p>It has been a long time since I wanted to stop coding algorithms. But now I'm back and aiming to reach the top 100,000 on LeetCode. Let's check my progress.</p>
+                                <div className="project-tags"></div>
+                                <a href="https://leetcode.com/u/tadienminhtri/" target="_blank" className="project-link">
+                                    Leveling up <i className="fa fa-external-link"></i>
+                                </a>
+                            </div>
+
+                            <div className="project-card">
+                                <div className="project-icon">💰</div>
+                                <h3>Financial management</h3>
+                                <p>I don't know why my money always runs out =)). So I want to make an app give me reasons.</p>
+                                <div className="project-tags"></div>
+                                <a href="https://github.com/friendlydenji/finmng" target="_blank" className="project-link">
+                                    Where's my money? <i className="fa fa-external-link"></i>
+                                </a>
                             </div>
 
                             <div className="project-card">
                                 <div className="project-icon">🎲</div>
                                 <h3>Board game</h3>
-                                <p>I had played multiple pc games but they make me toxic. So I started playing board games with my friends instead. And I want to make a board games platform for my friends to play together.</p>
+                                <p>I used to play a lot of PC games, but they made me toxic.
+                                    So I started playing board games with my friends.
+                                    Damn it make me toxic too =)).
+                                    Games leverage dices are bad, gays.</p>
                                 <div className="project-tags"></div>
-                                <a href="https://github.com/tritdm" target="_blank" className="project-link">
-                                    View GitHub <i className="fa fa-external-link"></i>
-                                </a>
-                            </div>
-
-                            <div className="project-card">
-                                <div className="project-icon">🎯</div>
-                                <h3>Financial management</h3>
-                                <p>I don't know why my money always runs out =)). If you have the same problem with me, you can try my financial management app.</p>
-                                <div className="project-tags"></div>
-                                <a href="https://github.com/friendlydenji/finmng" target="_blank" className="project-link">
-                                    View GitHub <i className="fa fa-external-link"></i>
-                                </a>
+                                {/* <a href="https://github.com/friendlydenji/mike-seven-wonders" target="_blank" className="project-link">
+                                    For Q.B3TV or anyone <i className="fa fa-external-link"></i>
+                                </a> */}
                             </div>
                         </div>
 

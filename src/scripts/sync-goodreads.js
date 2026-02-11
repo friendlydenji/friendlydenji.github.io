@@ -23,7 +23,7 @@ const parser = new Parser({
 });
 
 const USER_ID = '183266525';
-const DATA_DIR = path.join(__dirname, '../src/data');
+const DATA_DIR = path.join(__dirname, '../data');
 
 const PATH_MAP = {
     'normal': path.join(DATA_DIR, 'normal_books.json'),

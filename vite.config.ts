@@ -1,20 +1,20 @@
-// @ts-nocheck
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin, ViteDevServer } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { IncomingMessage, ServerResponse } from 'http'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // Custom plugin to handle local file operations for books and users
-const localCmsPlugin = () => ({
+const localCmsPlugin = (): Plugin => ({
   name: 'local-cms-plugin',
-  configureServer(server) {
-    server.middlewares.use((req, res, next) => {
+  configureServer(server: ViteDevServer) {
+    server.middlewares.use((req: IncomingMessage, res: ServerResponse, next) => {
       let body = '';
-      req.on('data', chunk => body += chunk.toString());
+      req.on('data', (chunk: Buffer) => body += chunk.toString());
 
       req.on('end', () => {
         const url = req.url;
@@ -22,7 +22,7 @@ const localCmsPlugin = () => ({
 
         // 1. SAVE BOOK
         if (method === 'POST' && url === '/api/save-book') {
-          const token = req.headers['x-admin-token'];
+          const token = req.headers['x-admin-token'] as string | undefined;
           // Simple validation: must be 'admin' in local storage format
           if (!token || !token.includes('role:admin')) {
             res.statusCode = 403;
@@ -47,7 +47,7 @@ const localCmsPlugin = () => ({
             }
 
             const books = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-            const index = books.findIndex(b => b.id === updatedBook.id);
+            const index = books.findIndex((b: { id: string }) => b.id === updatedBook.id);
 
             if (index !== -1) {
               books[index] = { ...books[index], ...updatedBook };
@@ -63,9 +63,9 @@ const localCmsPlugin = () => ({
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ success: true }));
             }
-          } catch (e) {
+          } catch (e: unknown) {
             res.statusCode = 500;
-            res.end(JSON.stringify({ success: false, error: e.message }));
+            res.end(JSON.stringify({ success: false, error: e instanceof Error ? e.message : 'Unknown error' }));
           }
         }
 
@@ -75,7 +75,7 @@ const localCmsPlugin = () => ({
             const { username, password } = JSON.parse(body);
             const usersPath = path.resolve(__dirname, 'src/data/users.json');
             const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
-            const user = users.find(u => u.username === username && u.password === password);
+            const user = users.find((u: { username: string; password?: string }) => u.username === username && u.password === password) as { username: string; role: string } | undefined;
 
             if (user) {
               res.statusCode = 200;
@@ -89,7 +89,7 @@ const localCmsPlugin = () => ({
               res.statusCode = 401;
               res.end(JSON.stringify({ success: false, error: 'Invalid credentials' }));
             }
-          } catch (e) {
+          } catch {
             res.statusCode = 500;
             res.end(JSON.stringify({ success: false }));
           }
@@ -102,7 +102,7 @@ const localCmsPlugin = () => ({
             const usersPath = path.resolve(__dirname, 'src/data/users.json');
             const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
 
-            if (users.find(u => u.username === username)) {
+            if (users.find((u: { username: string }) => u.username === username)) {
               res.statusCode = 400;
               res.end(JSON.stringify({ success: false, error: 'User already exists' }));
               return;
@@ -119,7 +119,7 @@ const localCmsPlugin = () => ({
               user: { username: newUser.username, role: newUser.role },
               token: `user:${newUser.username}|role:${newUser.role}`
             }));
-          } catch (e) {
+          } catch {
             res.statusCode = 500;
             res.end(JSON.stringify({ success: false }));
           }
