@@ -8,6 +8,9 @@ import CategoryPage from './pages/CategoryPage';
 import Landing from './pages/Landing';
 import AboutMe from './pages/AboutMe';
 import AboutSite from './pages/AboutSite';
+import RamblingList from './pages/RamblingList';
+import RamblingDetail from './pages/RamblingDetail';
+import RamblingEditor from './pages/RamblingEditor';
 import { HoverProvider } from './context/HoverContext';
 import HoverOverlay from './components/HoverOverlay';
 import './styles/main.css';
@@ -42,6 +45,13 @@ function App() {
             <Route path="about/me" element={<AboutMe />} />
             <Route path="about/site" element={<AboutSite />} />
             <Route path="login" element={<Login />} />
+          </Route>
+
+          <Route path="/writing" element={<ReadingLayout />}>
+            <Route path="rambling" element={<RamblingList />} />
+            <Route path="rambling/:id" element={<RamblingDetail />} />
+            <Route path="rambling/new" element={<RamblingEditor />} />
+            <Route path="rambling/edit/:id" element={<RamblingEditor />} />
           </Route>
 
           {/* Legacy redirects */}

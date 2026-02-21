@@ -7,6 +7,50 @@ import BookMetadata from '../components/book-detail/BookMetadata';
 import ChapterItem from '../components/book-detail/ChapterItem';
 import TableOfContents from '../components/book-detail/TableOfContents';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import MarkdownEditor from '../components/ui/MarkdownEditor';
+import { marked } from 'marked';
+
+// Custom renderer for Author Notes
+marked.use({
+    extensions: [{
+        name: 'authorNoteInline',
+        level: 'inline',
+        start(src: string) { return src.indexOf('!!:'); },
+        tokenizer(src: string) {
+            const match = /^!!:\s*([\s\S]+?)!!/.exec(src);
+            if (match) {
+                return {
+                    type: 'authorNoteInline',
+                    raw: match[0],
+                    text: match[1].trim()
+                };
+            }
+        },
+        renderer(token: any) {
+            return `<span class="author-note-inline">${token.text}</span>`;
+        }
+    }],
+    walkTokens(token: any) {
+        if (token.type === 'blockquote') {
+            const firstChild = token.tokens?.[0];
+            if (firstChild && firstChild.type === 'paragraph') {
+                const textToken = firstChild.tokens?.[0];
+                if (textToken && textToken.type === 'text' && textToken.text.startsWith('!!:')) {
+                    textToken.text = textToken.text.replace(/^!!:\s*/, '');
+                    token.isAuthorNote = true;
+                }
+            }
+        }
+    },
+    renderer: {
+        blockquote(this: any, token: any) {
+            if (token.isAuthorNote) {
+                return `<blockquote class="author-note">${this.parser.parse(token.tokens)}</blockquote>`;
+            }
+            return `<blockquote>${this.parser.parse(token.tokens)}</blockquote>`;
+        }
+    }
+});
 
 interface BookDetailProps {
     collection?: 'normal_books' | 'manga' | 'specialized';
@@ -135,14 +179,14 @@ const BookDetail: React.FC<BookDetailProps> = ({ collection = 'normal_books' }) 
 
                         <div className="hidden md:block text-sm text-gray-500 dark:text-gray-400 leading-relaxed italic border-l border-gray-100 dark:border-gray-800 pl-8">
                             {isEditing ? (
-                                <textarea
+                                <MarkdownEditor
                                     className="w-full bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 outline-none focus:border-blue-500 min-h-[150px] text-sm not-italic"
                                     placeholder="Author bio..."
                                     value={editData.authorBio || ''}
-                                    onChange={(e) => updateEditData({ authorBio: e.target.value })}
+                                    onChange={(val) => updateEditData({ authorBio: val })}
                                 />
                             ) : (
-                                book.authorBio
+                                <div className="p-6 max-w-none text-gray-700 dark:text-gray-300 prose prose-sm dark:prose-invert leading-relaxed prose-p:my-1 opacity-80" dangerouslySetInnerHTML={{ __html: marked.parse(book.authorBio || '') as string }} />
                             )}
                         </div>
                     </div>
@@ -153,18 +197,18 @@ const BookDetail: React.FC<BookDetailProps> = ({ collection = 'normal_books' }) 
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-16">
                     <div className="space-y-12">
                         <section>
-                            <div className="bg-blue-600 text-white px-6 py-3 font-bold uppercase tracking-widest text-xs rounded-t-lg">
+                            <div className="bg-blue-600 text-white px-6 py-3 font-bold uppercase tracking-widest text-sm rounded-t-lg">
                                 About
                             </div>
-                            <div className="p-8 border-2 border-blue-600 border-t-0 rounded-b-lg font-medium leading-relaxed dark:text-gray-200">
+                            <div className="p-6 border-2 border-blue-600 border-t-0 rounded-b-lg font-medium leading-relaxed dark:text-gray-200">
                                 {isEditing ? (
-                                    <textarea
+                                    <MarkdownEditor
                                         className="w-full bg-transparent p-0 outline-none focus:ring-0 resize-none min-h-[120px]"
                                         value={editData.summary}
-                                        onChange={(e) => updateEditData({ summary: e.target.value })}
+                                        onChange={(val) => updateEditData({ summary: val })}
                                     />
                                 ) : (
-                                    <div dangerouslySetInnerHTML={{ __html: book.summary }} />
+                                    <div className="prose prose-base dark:prose-invert max-w-none prose-p:my-2 prose-li:my-0.5 prose-headings:mt-0" dangerouslySetInnerHTML={{ __html: marked.parse(book.summary || '') as string }} />
                                 )}
                             </div>
                         </section>

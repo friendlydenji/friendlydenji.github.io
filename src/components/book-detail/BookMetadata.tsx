@@ -60,32 +60,7 @@ const BookMetadata: React.FC<BookMetadataProps> = ({
                     <User className="w-4 h-4 text-blue-600" />
                     <span className="text-gray-900 dark:text-gray-100">{book.author}</span>
                 </div>
-                <div className="flex items-center gap-3">
-                    <ExternalLink className="w-4 h-4 text-blue-600" />
-                    {isEditing ? (
-                        <select
-                            value={editData.status}
-                            onChange={(e) => onUpdateEditData({ status: e.target.value as 'read' | 'reading' | 'wanna-read' | 'end' | 'following' })}
-                            className="bg-gray-50 dark:bg-gray-800 border-none outline-none font-bold text-gray-900 dark:text-gray-100 rounded px-1 focus:ring-1 focus:ring-blue-500"
-                        >
-                            {book.collection === 'manga' ? (
-                                <>
-                                    <option value="following">Following</option>
-                                    <option value="end">End</option>
-                                    <option value="wanna-read">Wanna Read</option>
-                                </>
-                            ) : (
-                                <>
-                                    <option value="reading">Reading</option>
-                                    <option value="read">Read</option>
-                                    <option value="wanna-read">Wanna Read</option>
-                                </>
-                            )}
-                        </select>
-                    ) : (
-                        <span className="text-gray-900 dark:text-gray-100 italic capitalize">{book.status}</span>
-                    )}
-                </div>
+
                 <div className="flex items-center gap-3">
                     <ExternalLink className="w-4 h-4 text-blue-600" />
                     <a href={`https://www.goodreads.com/book/show/${book.id}`} target="_blank" rel="noreferrer" className="hover:text-blue-600 transition-colors">Goodreads</a>

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { bookApi } from '../lib/api';
 import { Book } from '../types/book';
+import { BookCollection } from '../lib/constants';
 
-export const useBookDetail = (id: string | undefined, collection: string = 'normal_books') => {
+export const useBookDetail = (id: string | undefined, collection: BookCollection = 'normal_books') => {
     const [book, setBook] = useState<Book | null>(null);
     const [editData, setEditData] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);

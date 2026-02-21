@@ -23,3 +23,28 @@
     @apply bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans antialiased m-0;
   }
 }
+
+/* Author Note Markdown Styling */
+.prose .author-note {
+  @apply relative overflow-hidden border-none bg-indigo-50/10 dark:bg-indigo-900/10 backdrop-blur-sm rounded-2xl py-1 px-6 my-6 transition-all duration-300;
+  border: 1px solid transparent;
+  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), linear-gradient(to right, #818cf8, #c084fc);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 4px 15px -1px rgba(129, 140, 248, 0.2);
+}
+
+.prose .author-note p {
+  @apply italic text-indigo-400 dark:text-indigo-300 font-medium !m-0;
+}
+
+.prose .author-note::before {
+  content: '';
+  @apply absolute -right-2 -top-2 w-16 h-16 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 blur-xl rounded-full;
+}
+
+.prose .author-note-inline {
+  @apply inline italic font-bold text-indigo-500 dark:text-indigo-300 bg-indigo-500/10 px-1.5 py-0.5 rounded-md mx-0.5 relative decoration-clone;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}

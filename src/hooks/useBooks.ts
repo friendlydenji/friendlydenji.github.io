@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { bookApi } from '../lib/api';
 import { Book } from '../types/book';
+import { BookCollection } from '../lib/constants';
 
-export const useBooks = (collection: string = 'normal_books', filter: 'all' | 'fiction' | 'non-fiction' = 'all') => {
+export const useBooks = (collection: BookCollection = 'normal_books', filter: 'all' | 'fiction' | 'non-fiction' = 'all') => {
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { ChevronDown, Trash2 } from 'lucide-react';
 import { Chapter } from '../../types/book';
+import MarkdownEditor from '../ui/MarkdownEditor';
+import { marked } from 'marked';
 
 interface ChapterItemProps {
     chapter: Chapter;
@@ -52,15 +54,15 @@ const ChapterItem: React.FC<ChapterItemProps> = ({
                 </div>
             </div>
             <div className={`transition-all duration-300 ease-in-out ${isEditing || isExpanded ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
-                <div className="p-8 prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
+                <div className="p-6 max-w-none text-gray-700 dark:text-gray-300">
                     {isEditing ? (
-                        <textarea
+                        <MarkdownEditor
                             className="w-full bg-transparent p-0 outline-none focus:ring-0 resize-y min-h-[200px] font-medium leading-relaxed"
                             value={chapter.content}
-                            onChange={(e) => onUpdate(chapter.id, 'content', e.target.value)}
+                            onChange={(val) => onUpdate(chapter.id, 'content', val)}
                         />
                     ) : (
-                        <div dangerouslySetInnerHTML={{ __html: chapter.content }} />
+                        <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-2 prose-li:my-0.5 prose-headings:mt-0" dangerouslySetInnerHTML={{ __html: marked.parse(chapter.content || '') as string }} />
                     )}
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Lock, User, ArrowRight, ShieldCheck, UserPlus } from 'lucide-react';
 
 const Login: React.FC = () => {
@@ -8,6 +8,10 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Get the previous page from location state, or default to /myreading
+    const from = (location.state as any)?.from?.pathname || '/myreading';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,7 +32,7 @@ const Login: React.FC = () => {
                 localStorage.setItem('admin_token', result.token);
                 localStorage.setItem('user_name', result.user.username);
                 localStorage.setItem('user_role', result.user.role);
-                navigate('/');
+                navigate(from, { replace: true });
             } else {
                 setError(result.error || 'Authentication failed');
                 setTimeout(() => setError(null), 3000);

@@ -8,6 +8,7 @@ import {
 
 import LibraryMenu from './header/LibraryMenu';
 import AboutMenu from './header/AboutMenu';
+import SearchBar from './header/SearchBar';
 
 const Header: React.FC = () => {
     const [userName, setUserName] = useState<string | null>(null);
@@ -29,23 +30,29 @@ const Header: React.FC = () => {
         <header className="border-b border-gray-100 dark:border-white/10 bg-white dark:bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
                 {/* Logo Section */}
-                <Link to="/myreading" className="flex items-center space-x-2 group shrink-0 py-4">
-                    <div className="w-10 h-10 bg-black dark:bg-white rounded-xl flex items-center justify-center transition-transform group-hover:scale-110">
-                        <BookOpen className="w-6 h-6 text-white dark:text-black" />
-                    </div>
-                    <span className="font-bold text-xl tracking-tight uppercase italic underline decoration-blue-600 decoration-4 underline-offset-4">Mike reading</span>
-                </Link>
+                <div className="flex items-center gap-8 h-full">
+                    <Link to="/myreading" className="flex items-center space-x-2 group shrink-0 py-4" title="Home">
+                        <div className="w-10 h-10 bg-black dark:bg-white rounded-xl flex items-center justify-center transition-transform group-hover:scale-110">
+                            <BookOpen className="w-6 h-6 text-white dark:text-black" />
+                        </div>
+                    </Link>
 
-                {/* Right-aligned Navigation and Auth */}
-                <div className="flex items-center h-full">
-                    {/* Navigation Section */}
-                    <nav className="hidden md:flex items-center h-full mr-4">
+                    {/* Navigation items moved to the left group */}
+                    <nav className="hidden md:flex items-center h-full">
                         <LibraryMenu />
                         <AboutMenu />
                     </nav>
+                </div>
+
+                {/* Right-aligned Search and Auth */}
+                <div className="flex items-center h-full">
+                    <div className="flex items-center">
+                        {/* Search Bar remains on the right */}
+                        <SearchBar />
+                    </div>
 
                     {/* User Auth Section */}
-                    <div className="flex items-center pl-6 border-l border-gray-100 dark:border-gray-800 shrink-0 h-full">
+                    <div className="flex items-center pl-6 border-l border-gray-100 dark:border-gray-800 shrink-0 h-full ml-2">
                         {userName ? (
                             <div className="flex items-center gap-4">
                                 <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800">

@@ -1,4 +1,5 @@
 import { Book } from '../types/book';
+import { BookCollection } from './constants';
 
 export const calculateReadingTime = (book: Book): string => {
     const wordsPerMinute = 200;
@@ -6,40 +7,46 @@ export const calculateReadingTime = (book: Book): string => {
 
     if (book.chapters) {
         book.chapters.forEach(ch => {
-            totalText += " " + (ch.title || "") + " " + (ch.content || "");
+            totalText += ` ${ch.title || ""} ${ch.content || ""}`;
         });
     }
 
-    // Clean text and count words
     const words = totalText.trim().split(/\s+/).filter(w => w.length > 0).length;
     const minutes = Math.ceil(words / wordsPerMinute);
 
     return `${minutes} phút`;
 };
 
-// This is the bridge. 
 export const bookApi = {
-    getAllBooks: async (collection: string = 'normal_books'): Promise<Book[]> => {
+    getAllBooks: async (collection: BookCollection = 'normal_books'): Promise<Book[]> => {
         try {
             const response = await import(`../data/${collection}.json`);
-            return (response.default as Book[]).map(b => ({ ...b, collection: collection as 'normal_books' | 'manga' | 'specialized' }));
+            return (response.default as Book[]).map(b => ({ ...b, collection }));
         } catch (error) {
             console.error(`Failed to load collection: ${collection}`, error);
             return [];
         }
     },
 
-    getBookById: async (id: string, collection: string = 'normal_books'): Promise<Book | undefined> => {
+    getBookById: async (id: string, collection: BookCollection = 'normal_books'): Promise<Book | undefined> => {
         try {
-            const response = await import(`../data/${collection}.json`);
-            const book = (response.default as Book[]).find((book: Book) => String(book.id) === String(id));
-            return book ? { ...book, collection: collection as 'normal_books' | 'manga' | 'specialized' } : undefined;
-        } catch {
-            return undefined;
+            // Load detail from individual file
+            const detailResponse = await import(`../data/books/${id}.json`);
+            const book = detailResponse.default as Book;
+            return { ...book, collection };
+        } catch (error) {
+            console.warn(`Failed to load book detail for ${id}, falling back to collection list:`, error);
+            try {
+                const response = await import(`../data/${collection}.json`);
+                const book = (response.default as Book[]).find((b: Book) => String(b.id) === String(id));
+                return book ? { ...book, collection } : undefined;
+            } catch {
+                return undefined;
+            }
         }
     },
 
-    updateBook: async (book: Book, collection: string = 'normal_books'): Promise<boolean> => {
+    updateBook: async (book: Book, collection: BookCollection = 'normal_books'): Promise<boolean> => {
         try {
             const token = localStorage.getItem('admin_token');
             const response = await fetch('/api/save-book', {
