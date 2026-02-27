@@ -20,12 +20,7 @@ const RamblingDetail: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
 
-    useEffect(() => {
-        setIsAdmin(localStorage.getItem('user_role') === 'admin');
-        fetchArticle();
-    }, [id]);
-
-    const fetchArticle = async () => {
+    const fetchArticle = React.useCallback(async () => {
         if (!id) return;
         try {
             const response = await fetch(`/src/data/rambling/${id}.json`);
@@ -37,7 +32,12 @@ const RamblingDetail: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        setIsAdmin(localStorage.getItem('user_role') === 'admin');
+        fetchArticle();
+    }, [id, fetchArticle]);
 
     if (loading) return <LoadingSpinner />;
 

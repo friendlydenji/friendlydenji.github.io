@@ -68,7 +68,7 @@ const AboutSite: React.FC = () => {
                     </p>
                 </section>
 
-                <section className="bg-gray-50 dark:bg-gray-800/50 p-8 rounded-3xl border border-gray-100 dark:border-gray-800">
+                <section className="bg-gray-50/50 dark:bg-white/5 p-8 rounded-3xl border border-gray-100 dark:border-white/5">
                     <h2 className="text-2xl font-black flex items-center gap-3 mb-6 text-black dark:text-white uppercase tracking-tighter italic">
                         <Layout className="w-6 h-6 text-blue-600" /> Design Philosophy
                     </h2>

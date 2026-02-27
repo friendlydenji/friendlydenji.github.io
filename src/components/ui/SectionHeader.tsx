@@ -17,7 +17,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
         <h2 className={`${isSubHeader ? 'text-lg font-bold' : 'text-2xl font-bold uppercase tracking-widest'} ${color}`}>
             {title}
         </h2>
-        <div className="h-px flex-1 bg-gray-100 dark:bg-gray-800"></div>
+        <div className="h-px flex-1 bg-[var(--divider)]"></div>
         <span className="text-[10px] font-medium text-[var(--text-secondary)] opacity-60 uppercase tracking-widest">
             {count} {count > 1 ? 'books' : 'book'}
         </span>

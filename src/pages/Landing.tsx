@@ -199,7 +199,7 @@ const Landing = () => {
                                     Thanks to a senior colleague at my first company, I started reading books after buying an e-reader.
                                     After dozens of books, I wanted to write somethings or at least summarize books for everyone to read with me.</p>
                                 <div className="project-tags"></div>
-                                <Link to="/myreading" className="project-link">
+                                <Link to="/mylibrary" className="project-link">
                                     Maybe my blog in future <i className="fa fa-external-link"></i>
                                 </Link>
                             </div>

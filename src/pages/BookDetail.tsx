@@ -26,28 +26,34 @@ marked.use({
                 };
             }
         },
-        renderer(token: any) {
-            return `<span class="author-note-inline">${token.text}</span>`;
+        renderer(token) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return `<span class="author-note-inline">${(token as any).text}</span>`;
         }
     }],
-    walkTokens(token: any) {
+    walkTokens(token) {
         if (token.type === 'blockquote') {
-            const firstChild = token.tokens?.[0];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const blockquoteToken = token as any;
+            const firstChild = blockquoteToken.tokens?.[0];
             if (firstChild && firstChild.type === 'paragraph') {
-                const textToken = firstChild.tokens?.[0];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const textToken = (firstChild as any).tokens?.[0];
                 if (textToken && textToken.type === 'text' && textToken.text.startsWith('!!:')) {
                     textToken.text = textToken.text.replace(/^!!:\s*/, '');
-                    token.isAuthorNote = true;
+                    blockquoteToken.isAuthorNote = true;
                 }
             }
         }
     },
     renderer: {
-        blockquote(this: any, token: any) {
-            if (token.isAuthorNote) {
-                return `<blockquote class="author-note">${this.parser.parse(token.tokens)}</blockquote>`;
+        blockquote(token) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const blockquoteToken = token as any;
+            if (blockquoteToken.isAuthorNote) {
+                return `<blockquote class="author-note">${this.parser.parse(blockquoteToken.tokens)}</blockquote>`;
             }
-            return `<blockquote>${this.parser.parse(token.tokens)}</blockquote>`;
+            return `<blockquote>${this.parser.parse(blockquoteToken.tokens)}</blockquote>`;
         }
     }
 });
@@ -144,7 +150,7 @@ const BookDetail: React.FC<BookDetailProps> = ({ collection = 'normal_books' }) 
         return (
             <div className="max-w-3xl mx-auto px-4 py-24 text-center">
                 <h2 className="text-2xl font-bold mb-4 italic text-gray-400">Summary not found.</h2>
-                <Link to="/myreading" className="text-blue-600 hover:underline font-bold">Click to go back</Link>
+                <Link to="/mylibrary" className="text-blue-600 hover:underline font-bold">Click to go back</Link>
             </div>
         );
     }

@@ -29,18 +29,7 @@ const RamblingEditor: React.FC = () => {
         thumbnail: ''
     });
 
-    useEffect(() => {
-        if (localStorage.getItem('user_role') !== 'admin') {
-            navigate('/writing/rambling');
-            return;
-        }
-
-        if (isEditing) {
-            fetchArticle();
-        }
-    }, [id]);
-
-    const fetchArticle = async () => {
+    const fetchArticle = React.useCallback(async () => {
         try {
             const response = await fetch(`/src/data/rambling/${id}.json`);
             if (!response.ok) throw new Error('Article not found');
@@ -52,7 +41,18 @@ const RamblingEditor: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        if (localStorage.getItem('user_role') !== 'admin') {
+            navigate('/writing/rambling');
+            return;
+        }
+
+        if (isEditing) {
+            fetchArticle();
+        }
+    }, [isEditing, navigate, fetchArticle]);
 
     const handleSave = async () => {
         if (!data.title.trim() || !data.content.trim()) {
@@ -96,7 +96,7 @@ const RamblingEditor: React.FC = () => {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a] pb-32">
+        <div className="min-h-screen bg-[var(--bg-primary)] pb-32">
             <div className="max-w-4xl mx-auto px-6 pt-12">
                 <div className="flex items-center justify-between mb-8">
                     <Link
@@ -116,7 +116,7 @@ const RamblingEditor: React.FC = () => {
                     </button>
                 </div>
 
-                <div className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 p-8 md:p-12 shadow-sm">
+                <div className="bg-[var(--bg-primary)] rounded-3xl border border-gray-100 dark:border-white/10 p-8 md:p-12 shadow-sm">
                     <div className="space-y-8">
                         <div>
                             <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Title</label>

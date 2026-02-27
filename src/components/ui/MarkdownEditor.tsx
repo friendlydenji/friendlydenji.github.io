@@ -53,7 +53,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                     e.preventDefault();
                     wrapSelection('<u>', '</u>');
                     break;
-                case 'h':
+                case 'h': {
                     e.preventDefault();
                     const textarea = textareaRef.current;
                     if (textarea) {
@@ -67,6 +67,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                         }, 0);
                     }
                     break;
+                }
                 case 'q':
                     e.preventDefault();
                     wrapSelection('!!: ', ' !!');

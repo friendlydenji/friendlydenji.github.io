@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-    BookOpen,
     User,
     LogOut
 } from 'lucide-react';
@@ -27,57 +26,61 @@ const Header: React.FC = () => {
     };
 
     return (
-        <header className="border-b border-gray-100 dark:border-white/10 bg-white dark:bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-                {/* Logo Section */}
-                <div className="flex items-center gap-8 h-full">
-                    <Link to="/myreading" className="flex items-center space-x-2 group shrink-0 py-4" title="Home">
-                        <div className="w-10 h-10 bg-black dark:bg-white rounded-xl flex items-center justify-center transition-transform group-hover:scale-110">
-                            <BookOpen className="w-6 h-6 text-white dark:text-black" />
-                        </div>
-                    </Link>
+        <header className="border-b border-gray-100 dark:border-white/10 bg-[var(--bg-primary)] backdrop-blur-md sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+                {/* Top Row: Logo & Search/Auth */}
+                <div className="flex items-stretch justify-between relative">
+                    {/* Left Section: Navigation items */}
+                    <div className="w-1/3 flex">
+                        <nav className="flex items-stretch gap-1 md:gap-4">
+                            <LibraryMenu />
+                            <AboutMenu />
+                        </nav>
+                    </div>
 
-                    {/* Navigation items moved to the left group */}
-                    <nav className="hidden md:flex items-center h-full">
-                        <LibraryMenu />
-                        <AboutMenu />
-                    </nav>
-                </div>
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 py-6">
+                        <Link
+                            to="/mylibrary"
+                            className="flex items-center group no-underline"
+                        >
+                            <span className="flex items-center font-['Playfair_Display'] text-3xl md:text-5xl tracking-tighter leading-none transition-transform duration-300 group-hover:scale-[1.02]">
+                                <span className="text-black dark:text-white font-bold">Mike</span>
+                                <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent font-bold">library</span>
+                                <span className="ml-1 w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-gradient-to-tr from-blue-400 via-purple-400 to-pink-500 shadow-sm self-end mb-1 md:mb-1.5"></span>
+                            </span>
+                        </Link>
+                    </div>
 
-                {/* Right-aligned Search and Auth */}
-                <div className="flex items-center h-full">
-                    <div className="flex items-center">
-                        {/* Search Bar remains on the right */}
+                    <div className="w-1/3 flex items-center justify-end gap-2 md:gap-4 py-6">
                         <SearchBar />
-                    </div>
-
-                    {/* User Auth Section */}
-                    <div className="flex items-center pl-6 border-l border-gray-100 dark:border-gray-800 shrink-0 h-full ml-2">
-                        {userName ? (
-                            <div className="flex items-center gap-4">
-                                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800">
-                                    <User className="w-3.5 h-3.5 text-blue-600" />
-                                    <span className="text-xs font-black uppercase tracking-widest text-blue-600">{userName}</span>
+                        <div className="flex items-center pl-4 border-l border-gray-100 dark:border-gray-800 shrink-0 h-8 ml-2">
+                            {userName ? (
+                                <div className="flex items-center gap-4">
+                                    <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800">
+                                        <User className="w-3 h-3 text-blue-600" />
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">{userName}</span>
+                                    </div>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
+                                        title="Logout"
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={handleLogout}
-                                    className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                                    title="Logout"
+                            ) : (
+                                <Link
+                                    to="/myreading/login"
+                                    className="flex items-center gap-2 px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-[9px] font-black uppercase tracking-widest rounded-lg hover:opacity-80 transition-all shadow-lg"
                                 >
-                                    <LogOut className="w-5 h-5" />
-                                </button>
-                            </div>
-                        ) : (
-                            <Link
-                                to="/myreading/login"
-                                className="flex items-center gap-2 px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:opacity-80 transition-all shadow-xl shadow-black/10 dark:shadow-white/5"
-                            >
-                                <User className="w-3.5 h-3.5" />
-                                <span>Login</span>
-                            </Link>
-                        )}
+                                    <User className="w-3 h-3" />
+                                    <span>Login</span>
+                                </Link>
+                            )}
+                        </div>
                     </div>
                 </div>
+
             </div>
         </header>
     );

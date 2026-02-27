@@ -23,7 +23,7 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({
     return (
         <nav className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.1em] text-gray-400">
-                <Link to="/myreading" className="hover:text-blue-600 transition-colors inline-flex items-center gap-1">
+                <Link to="/mylibrary" className="hover:text-blue-600 transition-colors inline-flex items-center gap-1">
                     <ArrowLeft className="w-2.5 h-2.5" />
                     Mike library
                 </Link>

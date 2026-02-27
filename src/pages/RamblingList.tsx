@@ -37,12 +37,12 @@ const RamblingList: React.FC = () => {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a] py-12">
+        <div className="min-h-screen bg-[var(--bg-primary)] py-12 transition-colors duration-300">
             <div className="max-w-4xl mx-auto px-6">
                 <div className="flex items-center justify-between mb-12">
                     <div>
-                        <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tighter">Rambling</h1>
-                        <p className="text-gray-500 dark:text-gray-400 font-medium">Random thoughts, essays, and stories.</p>
+                        <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tighter">Tản mạn</h1>
+                        <p className="text-gray-500 dark:text-gray-400 font-medium">Nơi mình viết mấy cái xàm xàm mình ngẫu hứng nghĩ ra và muốn viết lại.</p>
                     </div>
                     {isAdmin && (
                         <Link
@@ -56,7 +56,7 @@ const RamblingList: React.FC = () => {
 
                 <div className="space-y-8">
                     {articles.length === 0 ? (
-                        <div className="text-center py-20 bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                        <div className="text-center py-20 bg-[var(--bg-primary)] rounded-3xl border border-gray-100 dark:border-white/5 shadow-sm">
                             <p className="text-gray-400 font-bold italic">No posts yet. Stay tuned!</p>
                         </div>
                     ) : (
@@ -64,7 +64,7 @@ const RamblingList: React.FC = () => {
                             <Link
                                 key={article.id}
                                 to={`/writing/rambling/${article.id}`}
-                                className="group block bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 p-6 md:p-8 hover:shadow-2xl hover:shadow-black/5 dark:hover:shadow-white/5 transition-all"
+                                className="group block bg-[var(--bg-primary)] rounded-3xl border border-gray-100 dark:border-white/5 p-6 md:p-8 hover:shadow-2xl hover:shadow-black/5 dark:hover:shadow-white/10 transition-all"
                             >
                                 <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8">
                                     <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-inner">

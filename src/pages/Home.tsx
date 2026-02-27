@@ -1,92 +1,133 @@
 import React, { useState } from 'react';
-import { Book } from '../types/book';
-import BookCard from '../components/BookCard';
-import { useBooks } from '../hooks/useBooks';
-import SectionHeader from '../components/ui/SectionHeader';
-import FilterButton from '../components/ui/FilterButton';
-import LoadingSpinner from '../components/ui/LoadingSpinner';
+import { Link } from 'react-router-dom';
+import { Eye, Hand, ArrowRight } from 'lucide-react';
 
 const Home: React.FC = () => {
-    const [activeFilter, setActiveFilter] = useState<'all' | 'fiction' | 'non-fiction'>('all');
-    const { books, loading } = useBooks('normal_books', activeFilter);
+    const [hovered, setHovered] = useState<'reading' | 'writing' | null>(null);
 
-    if (loading) return <LoadingSpinner />;
+    // leftWidth defines the central split point (0-100)
+    const leftWidth = hovered === 'reading' ? 65 : hovered === 'writing' ? 35 : 50;
 
-    const readingBooks = books.filter(b => b.status === 'reading');
-    const readBooks = books.filter(b => b.status === 'read');
-    const wannaReadBooks = books.filter(b => b.status === 'wanna-read');
+    // Slant offset creates the tilt (approx 5% offset)
+    const slant = 5;
+    const splitTop = leftWidth - slant;
+    const splitBottom = leftWidth + slant;
 
-    // Group read books by year
-    const readBooksByYear = readBooks.reduce((acc, book) => {
-        const year = new Date(book.readAt || book.date).getFullYear().toString();
-        if (!acc[year]) acc[year] = [];
-        acc[year].push(book);
-        return acc;
-    }, {} as Record<string, Book[]>);
+    const readingCategories = [
+        { to: "/myreading/books", label: "Book" },
+        { to: "/myreading/manga", label: "Manga & Manhwa" },
+        { to: "/myreading/specialized", label: "Specialized" }
+    ];
 
-    const sortedYears = Object.keys(readBooksByYear).sort((a, b) => b.localeCompare(a));
+    const writingCategories = [
+        { to: "/writing/rambling", label: "Rambling" }
+    ];
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-                <div>
-                    <h1 className="text-4xl font-black tracking-tight mb-4">Books Recap</h1>
-                    <p className="text-xl text-[var(--text-secondary)] max-w-2xl">
-                        Tracking all my reading books.
-                        Trying to draw an image for each fiction book and recap information from non-fiction books.
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <FilterButton type="all" label="All" activeFilter={activeFilter} onClick={setActiveFilter} />
-                    <FilterButton type="non-fiction" label="Non-fiction" activeFilter={activeFilter} onClick={setActiveFilter} />
-                    <FilterButton type="fiction" label="Fiction" activeFilter={activeFilter} onClick={setActiveFilter} />
-                </div>
-            </div>
+        <div className="h-full w-full overflow-hidden relative select-none">
+            {/* ═══ 1. TOTALLY TRANSPARENT INTERACTIVE PANELS ═══ */}
+            {/* We no longer put background colors on these panels to ensure zero visible seams. */}
+            {/* The single background color is provided by the parent container at the top Level. */}
+            <div className="h-full w-full relative z-10">
 
-            {readingBooks.length > 0 && (
-                <section className="mb-24">
-                    <SectionHeader title="Currently Reading" count={readingBooks.length} color="text-blue-600" />
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
-                        {readingBooks.map((book) => (
-                            <BookCard key={book.id} book={book} />
-                        ))}
-                    </div>
-                </section>
-            )}
+                {/* --- READING PANEL (Purely Interactive Clipping) --- */}
+                <div
+                    className="absolute inset-0 h-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
+                    style={{
+                        clipPath: `polygon(0 0, ${splitTop}% 0, ${splitBottom}% 100%, 0 100%)`,
+                        WebkitClipPath: `polygon(0 0, ${splitTop}% 0, ${splitBottom}% 100%, 0 100%)`
+                    }}
+                    onMouseEnter={() => setHovered('reading')}
+                    onMouseLeave={() => setHovered(null)}
+                >
 
-            {readBooks.length > 0 && (
-                <section className="mb-24">
-                    <SectionHeader title="Read" count={readBooks.length} color="text-purple-600" />
-
-                    {sortedYears.map(year => (
-                        <div key={year} className="mb-20 last:mb-0">
-                            <SectionHeader title={year} count={readBooksByYear[year].length} isSubHeader={true} />
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
-                                {readBooksByYear[year].map((book) => (
-                                    <BookCard key={book.id} book={book} />
+                    <div
+                        className="h-full flex flex-col items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
+                        style={{ width: `${leftWidth}%` }}
+                    >
+                        {hovered === 'reading' ? (
+                            <div className="h-full w-full flex flex-col">
+                                {readingCategories.map((item, i) => (
+                                    <Link
+                                        key={i}
+                                        to={item.to}
+                                        className="relative flex-1 flex items-center justify-center group/row transition-colors duration-300"
+                                    >
+                                        <div className="absolute inset-x-0 bottom-0 h-px bg-black/5 dark:bg-white/5" />
+                                        <span className="text-lg md:text-2xl font-black italic uppercase tracking-[0.15em] text-gray-400 dark:text-white/40 group-hover/row:text-gray-900 dark:group-hover/row:text-white transition-colors duration-300">
+                                            {item.label}
+                                        </span>
+                                        <ArrowRight className="absolute right-8 w-5 h-5 text-transparent group-hover/row:text-gray-900 dark:group-hover/row:text-white group-hover/row:translate-x-1 transition-all duration-300" />
+                                    </Link>
                                 ))}
                             </div>
-                        </div>
-                    ))}
-                </section>
-            )}
-
-            {wannaReadBooks.length > 0 && (
-                <section className="mb-24">
-                    <SectionHeader title="Wanna Read" count={wannaReadBooks.length} color="text-green-600" />
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
-                        {wannaReadBooks.map((book) => (
-                            <BookCard key={book.id} book={book} />
-                        ))}
+                        ) : (
+                            <div className="flex flex-col items-center justify-center text-center p-8">
+                                <div className="mb-6 p-5 rounded-[2.5rem] border border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5 text-gray-400 dark:text-white/60">
+                                    <Eye className="w-14 h-14" />
+                                </div>
+                                <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-gray-900 dark:text-white uppercase transition-colors">Reading</h2>
+                                <p className="text-gray-400 dark:text-white/20 font-black uppercase tracking-[0.3em] text-[10px] mt-4">Exploring books and manga</p>
+                            </div>
+                        )}
                     </div>
-                </section>
-            )}
-
-            {books.length === 0 && (
-                <div className="py-24 text-center">
-                    <p className="text-[var(--text-secondary)]">No books found in this category.</p>
                 </div>
-            )}
+
+                {/* --- WRITING PANEL (Purely Interactive Clipping) --- */}
+                <div
+                    className="absolute inset-0 h-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
+                    style={{
+                        clipPath: `polygon(${splitTop}% 0, 100% 0, 100% 100%, ${splitBottom}% 100%)`,
+                        WebkitClipPath: `polygon(${splitTop}% 0, 100% 0, 100% 100%, ${splitBottom}% 100%)`
+                    }}
+                    onMouseEnter={() => setHovered('writing')}
+                    onMouseLeave={() => setHovered(null)}
+                >
+
+                    <div
+                        className="h-full flex flex-col items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ml-auto"
+                        style={{ width: `${100 - leftWidth}%` }}
+                    >
+                        {hovered === 'writing' ? (
+                            <div className="h-full w-full flex flex-col">
+                                {writingCategories.map((item, i) => (
+                                    <Link
+                                        key={i}
+                                        to={item.to}
+                                        className="relative flex-1 flex items-center justify-center group/row transition-colors duration-300"
+                                    >
+                                        <div className="absolute inset-x-0 bottom-0 h-px bg-black/5 dark:bg-white/5" />
+                                        <span className="text-lg md:text-2xl font-black italic uppercase tracking-[0.15em] text-gray-400 dark:text-white/40 group-hover/row:text-gray-900 dark:group-hover/row:text-white transition-colors duration-300">
+                                            {item.label}
+                                        </span>
+                                        <ArrowRight className="absolute right-8 w-5 h-5 text-transparent group-hover/row:text-gray-900 dark:group-hover/row:text-white group-hover/row:translate-x-1 transition-all duration-300" />
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center text-center p-8">
+                                <div className="mb-6 p-5 rounded-[2.5rem] border border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5 text-gray-400 dark:text-white/60">
+                                    <Hand className="w-14 h-14" />
+                                </div>
+                                <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-gray-900 dark:text-white uppercase transition-colors">Writing</h2>
+                                <p className="text-gray-400 dark:text-white/20 font-black uppercase tracking-[0.3em] text-[10px] mt-4">Sharing thoughts and notes</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* ═══ 2. DIAGONAL DIVIDER (The only visual line) ═══ */}
+                <svg className="absolute inset-0 w-full h-full z-20 pointer-events-none" preserveAspectRatio="none">
+                    <line
+                        x1={`${splitTop}%`} y1="0" x2={`${splitBottom}%`} y2="100%"
+                        className="transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
+                        style={{
+                            stroke: 'var(--divider)',
+                            strokeWidth: '1.5',
+                        }}
+                    />
+                </svg>
+            </div>
         </div>
     );
 };

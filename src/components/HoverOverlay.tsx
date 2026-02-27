@@ -25,11 +25,11 @@ const HoverOverlay: React.FC = () => {
 
     return (
         <div
-            className={`fixed inset-0 pointer-events-none z-10 transition-opacity duration-500 ease-in-out ${shouldShow ? 'opacity-20' : 'opacity-0'}`}
+            className={`absolute inset-0 pointer-events-none z-0 transition-opacity duration-500 ease-in-out ${shouldShow ? 'opacity-20' : 'opacity-0'}`}
         >
             {activeMedia && (
                 <div className="w-full h-full relative overflow-hidden">
-                    <div className="absolute inset-0 bg-black/40 blur-3xl scale-110" />
+                    <div className="absolute inset-0 bg-black/40 dark:bg-black/40 blur-3xl scale-110" />
                     {activeMedia.type === 'video' ? (
                         <video
                             key={activeMedia.url}

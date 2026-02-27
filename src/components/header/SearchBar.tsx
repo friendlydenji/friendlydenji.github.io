@@ -67,7 +67,7 @@ const SearchBar: React.FC = () => {
     const getBookLink = (book: Book) => {
         if (book.collection === 'manga') return `/myreading/manga/summary/${book.id}`;
         if (book.collection === 'specialized') return `/myreading/specialized/summary/${book.id}`;
-        return `/myreading/summary/${book.id}`;
+        return `/myreading/books/summary/${book.id}`;
     };
 
     useEffect(() => {

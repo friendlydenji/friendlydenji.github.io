@@ -132,10 +132,9 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
 
     if (isNonFiction) {
         const basePath = "/myreading";
-        const bookPath = book.collection === 'manga' ? '/manga'
-            : book.collection === 'specialized' ? '/specialized'
-                : '';
-        const path = `${basePath}${bookPath}/summary/${book.id}`;
+        const path = book.collection === 'manga' ? `${basePath}/manga/summary/${book.id}`
+            : book.collection === 'specialized' ? `${basePath}/specialized/summary/${book.id}`
+                : `${basePath}/books/summary/${book.id}`;
         return (
             <Link
                 to={path}

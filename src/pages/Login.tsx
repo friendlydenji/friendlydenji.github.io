@@ -10,8 +10,14 @@ const Login: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Get the previous page from location state, or default to /myreading
-    const from = (location.state as any)?.from?.pathname || '/myreading';
+    interface LocationState {
+        from?: {
+            pathname: string;
+        };
+    }
+
+    // Get the previous page from location state, or default to /mylibrary
+    const from = (location.state as LocationState)?.from?.pathname || '/mylibrary';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

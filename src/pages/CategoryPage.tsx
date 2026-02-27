@@ -18,7 +18,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ title, collection }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="mb-12">
                 <h1 className="text-4xl font-black tracking-tight mb-4 italic underline decoration-blue-600 decoration-4 underline-offset-4 inline-block">{title}</h1>
-                <p className="text-xl text-[var(--test-secondary)] max-w-2xl mt-4">
+                <p className="text-xl text-[var(--text-secondary)] max-w-2xl mt-4">
                     Exploring my collection.
                 </p>
             </div>
